@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Log;
 
 Route::get('/', function () {
     return view('posts', [
-        'posts' => Post::latest()->with(['category','author'])->get()
+        'posts' => Post::latest()->get()
     ]);
 });
 
