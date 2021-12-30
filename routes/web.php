@@ -4,8 +4,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\NewsletterController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,33 +17,7 @@ use Illuminate\Validation\ValidationException;
 |
  */
 
-Route::post('newsletter', function () {
-    //dd(openssl_get_cert_locations());
-    request()->validate(['email' => 'required|email']);
-
-    $mailchimp = new \MailchimpMarketing\ApiClient();
-
-    $mailchimp->setConfig([
-        'apiKey' => config('services.mailchimp.key'),
-        'server' => 'us20',
-    ]);
-
-    try {
-        $response = $mailchimp->lists->addListMember('e1ed97d652', [
-            'email_address' => 'maythukyaw@gmail.com',
-            'status' => 'subscribed',
-        ]);
-    } catch (Exception $e) {
-        throw ValidationException::withMessages([
-            'email' => 'This email could not be added to our newsletter list.'
-        ]);
-    }
-
-    return redirect('/')
-        ->with('success', 'You are now signed up for our newsletter!');
-    
-    ddd($response);
-});
+Route::post('newsletter', NewsletterController::class);
 
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('posts/{post:slug}', [PostController::class, 'show']);
